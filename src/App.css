@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-surface: var(--surface);
+  --color-on-surface: var(--on-surface);
+  --color-error: var(--error);
+  
+  --color-container-low: var(--container-low);
+  --color-container: var(--container);
+  --color-container-high: var(--container-high);
+}
+
+:root {
+  --primary: #00488d;
+  --primary-container: #005fb8;
+  --secondary: #006685;
+  --tertiary: #005429;
+  --surface: #f4faff;
+  --on-surface: #0f1d24;
+  --error: #ba1a1a;
+  
+  --container-low: #e7f6ff;
+  --container: #e0f0fa;
+  --container-high: #dbebf4;
+}
+
+.dark {
+  --primary: #8bcdff;
+  --primary-container: #00488d;
+  --secondary: #63d3ff;
+  --tertiary: #75dc9b;
+  --surface: #0f1d24;
+  --on-surface: #e0f0fa;
+  --error: #ffb4ab;
+
+  --container-low: #172730;
+  --container: #1f313c;
+  --container-high: #293c48;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Material Symbols Icon Font */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-flex;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+main > :first-child {
+  margin-top: 0 !important;
+}
+
+main > :last-child {
+  margin-bottom: 0 !important;
+}
