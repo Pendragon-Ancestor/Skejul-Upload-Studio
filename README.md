@@ -645,10 +645,6 @@ Dengan syarat:
 - 💡 Create issue dengan tag "enhancement"
 - Describe use case dengan detail
 
-### Feedback & Suggestions
-- 📧 Email: nurmuhammadrizkisetiawan9@gmail.com
-- 💬 GitHub Discussions (coming soon)
-
 ---
 
 ## 📊 Project Statistics
