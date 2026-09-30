@@ -1,0 +1,237 @@
+import { useAppContext } from '../../../context/AppContext';
+
+export function Statistik() {
+  const { state } = useAppContext();
+
+  const seriesData = [
+    {
+      id: 'SER-01',
+      name: 'Wuxia After a Thousand Years of Cultivation',
+      category: 'NOVEL_CHINA',
+      episodes: 84,
+      lastUpdated: '2026-09-29T06:14:00Z',
+      description: 'Adaptasi translasi bab 401 - 485',
+    },
+    {
+      id: 'SER-02',
+      name: 'Naruto True Story: Itachi Shinden',
+      category: 'LIGHT_NOVEL',
+      episodes: 62,
+      lastUpdated: '2026-09-28T22:40:00Z',
+      description: 'Pembacaan novel terjemahan resmi',
+    },
+    {
+      id: 'SER-03',
+      name: 'Goblin Slayer: Side Story Year One',
+      category: 'LIGHT_NOVEL',
+      episodes: 32,
+      lastUpdated: '2026-09-27T14:10:00Z',
+      description: 'Audiobook rangkuman volume 1 hingga 3',
+    },
+  ];
+
+  return (
+    <div className="pl-64">
+      <main className="relative pt-10 min-h-screen bg-surface px-space-xl py-space-lg">
+        <div className="flex flex-col w-full">
+          {/* Header */}
+          <div className="flex flex-wrap items-center justify-between gap-space-md mb-space-xl bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+            <div className="flex items-center gap-space-md">
+              <div className="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-[24px]">analytics</span>
+              </div>
+              <div>
+                <div className="flex items-center gap-space-xs">
+                  <span className="font-headline-sm text-headline-sm text-on-surface">Statistik & Arsip Studio</span>
+                  <span className="px-space-xs py-0.5 rounded text-code-sm font-code-sm bg-surface-container-high text-on-surface-variant font-medium">
+                    v2.4 LTS
+                  </span>
+                </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Ringkasan performa publikasi, inventaris seri terjemahan novel, dan integritas data lokal.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-xl">
+            {[
+              {
+                label: 'Total Video Terdaftar',
+                icon: 'video_library',
+                value: '212',
+                unit: 'video',
+                color: 'secondary',
+              },
+              {
+                label: 'Konsistensi Upload',
+                icon: 'schedule',
+                value: '4',
+                unit: 'video / hari',
+                color: 'primary',
+              },
+              {
+                label: 'Seri Paling Aktif',
+                icon: 'auto_stories',
+                value: 'Wuxia Immortality',
+                unit: '84 Part',
+                color: 'tertiary',
+              },
+              {
+                label: 'Format Penyimpanan',
+                icon: 'lock',
+                value: 'File JSON Lokal',
+                unit: '100% Offline',
+                color: 'tertiary',
+              },
+            ].map((metric, i) => (
+              <div key={i} className="relative overflow-hidden p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-space-sm">
+                  <span className="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant tracking-wider">
+                    {metric.label}
+                  </span>
+                  <div className="w-8 h-8 rounded-full bg-gray-400/20 flex items-center justify-center text-gray-600">
+                    <span className="material-symbols-outlined text-[18px]">{metric.icon}</span>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-space-xs my-space-xs">
+                  <span className="font-display text-display text-on-surface font-semibold tracking-tight">{metric.value}</span>
+                  <span className="font-body-md text-body-md text-on-surface-variant">{metric.unit}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Series Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+            <div className="lg:col-span-8 flex flex-col gap-space-lg">
+              {/* Distribution Chart */}
+              <div className="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
+                  <div>
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface">Distribusi Volume Seri Novel & Video</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">
+                      Proporsi pembagian chapter terjemahan yang telah siap upload
+                    </p>
+                  </div>
+                </div>
+
+                <div className="w-full h-3 rounded-full bg-surface-container-high flex overflow-hidden mb-space-sm">
+                  <div className="h-full bg-primary transition-all duration-500" style={{ width: '39.6%' }} />
+                  <div className="h-full bg-secondary transition-all duration-500" style={{ width: '29.2%' }} />
+                  <div className="h-full bg-secondary-container transition-all duration-500" style={{ width: '15.1%' }} />
+                  <div className="h-full bg-surface-dim transition-all duration-500" style={{ width: '16.1%' }} />
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-space-sm pt-space-xs text-body-sm font-body-sm">
+                  <div className="flex items-center gap-space-xs">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-primary" />
+                    <span className="text-on-surface truncate">Wuxia (39.6%)</span>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-secondary" />
+                    <span className="text-on-surface truncate">Naruto (29.2%)</span>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-secondary-container" />
+                    <span className="text-on-surface truncate">Goblin (15.1%)</span>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-surface-dim" />
+                    <span className="text-on-surface-variant truncate">Lain (16.1%)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Series Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                {seriesData.map((series) => (
+                  <div key={series.id} className="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                      <div className="flex items-start justify-between gap-space-sm mb-space-xs">
+                        <div className="flex items-center gap-space-xs">
+                          <span className="px-space-xs py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-primary uppercase">
+                            {series.category}
+                          </span>
+                          <span className="px-space-xs py-0.5 rounded text-[11px] font-semibold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                            Rutin
+                          </span>
+                        </div>
+                        <span className="font-code-sm text-code-sm text-on-surface-variant font-medium">{series.id}</span>
+                      </div>
+                      <h4 className="font-title-md text-title-md text-on-surface hover:text-primary transition-colors">
+                        {series.name}
+                      </h4>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1">{series.description}</p>
+                    </div>
+                    <div className="mt-space-md pt-space-sm flex flex-col gap-space-sm">
+                      <div className="flex items-center justify-between text-body-sm font-body-sm">
+                        <span className="text-on-surface-variant">Total Upload Siap:</span>
+                        <span className="font-code-sm text-code-sm font-semibold text-on-surface">{series.episodes} Episode</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Panel: Data Management */}
+            <div className="lg:col-span-4 flex flex-col gap-space-md">
+              <div className="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-space-sm">
+                    <div className="flex items-center gap-space-xs">
+                      <span className="material-symbols-outlined text-primary text-[20px]">save</span>
+                      <h3 className="font-title-md text-title-md text-on-surface">Penyimpanan & Cadangan</h3>
+                    </div>
+                    <span className="w-2.5 h-2.5 rounded-full bg-tertiary" />
+                  </div>
+
+                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+                    Basis data SkejulUpload disimpan dalam format JSON di drive lokal komputer Anda.
+                  </p>
+
+                  <div className="p-space-md rounded-lg bg-surface-container-high flex flex-col gap-1 mb-space-md">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label-sm text-label-sm font-semibold text-on-surface">Lokasi File Master:</span>
+                    </div>
+                    <div className="p-2 rounded bg-surface-container-lowest font-code-sm text-code-sm text-on-surface truncate">
+                      C:\Users\Admin\Documents\SkejulUpload\skejul_upload_video_2026-09-29.json
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-space-xs mb-space-lg">
+                    <div className="flex items-center justify-between text-body-sm font-body-sm">
+                      <span className="text-on-surface-variant flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px] text-tertiary">check</span> Auto-Save Perubahan
+                      </span>
+                      <span className="font-semibold text-tertiary">Aktif</span>
+                    </div>
+                    <div className="flex items-center justify-between text-body-sm font-body-sm">
+                      <span className="text-on-surface-variant flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px] text-tertiary">check</span> Integritas Format
+                      </span>
+                      <span className="font-semibold text-on-surface">Valid JSON</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-space-sm pt-space-sm">
+                  <button className="w-full flex items-center justify-center gap-space-xs py-space-sm px-space-md bg-primary text-on-primary rounded-lg font-label-md text-label-md font-semibold hover:opacity-90 active:scale-[0.99] transition-all shadow-sm">
+                    <span className="material-symbols-outlined text-[18px]">download_for_offline</span>
+                    <span>Export File JSON</span>
+                  </button>
+                  <button className="w-full flex items-center justify-center gap-space-xs py-space-sm px-space-md bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md font-semibold hover:bg-surface-container-highest transition-colors">
+                    <span className="material-symbols-outlined text-[18px]">file_open</span>
+                    <span>Import File JSON</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
