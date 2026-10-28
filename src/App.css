@@ -10,10 +10,30 @@
   --color-surface: var(--surface);
   --color-on-surface: var(--on-surface);
   --color-error: var(--error);
+
+  --color-on-primary: var(--on-primary);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-on-error: var(--on-error);
   
   --color-container-low: var(--container-low);
   --color-container: var(--container);
   --color-container-high: var(--container-high);
+  --color-container-lowest: var(--container-lowest);
+  --color-container-highest: var(--container-highest);
+
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-success: var(--success);
+  --color-on-success: var(--on-success);
+  --color-warning: var(--warning);
+  --color-on-warning: var(--on-warning);
+  --color-danger: var(--danger);
+  --color-on-danger: var(--on-danger);
+  --color-info: var(--info);
+  --color-on-info: var(--on-info);
 }
 
 :root {
@@ -24,10 +44,30 @@
   --surface: #f4faff;
   --on-surface: #0f1d24;
   --error: #ba1a1a;
+
+  --on-primary: #ffffff;
+  --on-secondary: #ffffff;
+  --on-tertiary: #ffffff;
+  --on-error: #ffffff;
   
+  --container-lowest: #ffffff;
   --container-low: #e7f6ff;
   --container: #e0f0fa;
   --container-high: #dbebf4;
+  --container-highest: #d5e5ee;
+
+  --on-surface-variant: #424752;
+  --outline: #727783;
+  --outline-variant: #c2c6d4;
+
+  --success: #056e2c;
+  --on-success: #ffffff;
+  --warning: #8a5300;
+  --on-warning: #ffffff;
+  --danger: #ba1a1a;
+  --on-danger: #ffffff;
+  --info: #00488d;
+  --on-info: #ffffff;
 }
 
 .dark {
@@ -39,9 +79,29 @@
   --on-surface: #e0f0fa;
   --error: #ffb4ab;
 
+  --on-primary: #001b3d;
+  --on-secondary: #003547;
+  --on-tertiary: #003919;
+  --on-error: #690005;
+
+  --container-lowest: #0a151b;
   --container-low: #172730;
   --container: #1f313c;
   --container-high: #293c48;
+  --container-highest: #334754;
+
+  --on-surface-variant: #b8c4d0;
+  --outline: #8b919c;
+  --outline-variant: #3a4a55;
+
+  --success: #75dc9b;
+  --on-success: #003919;
+  --warning: #ffcd82;
+  --on-warning: #271900;
+  --danger: #ffb4ab;
+  --on-danger: #690005;
+  --info: #8bcdff;
+  --on-info: #001b3d;
 }
 
 * {

@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext';
 
 const navigationItems = [
   {
@@ -21,11 +22,17 @@ const navigationItems = [
     icon: 'analytics',
     label: 'Statistik & Arsip',
   },
+  {
+    path: '/pengaturan',
+    icon: 'settings',
+    label: 'Pengaturan',
+  },
 ];
 
 export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { videos } = useAppContext();
 
   return (
     <aside className="w-64 bg-container-low border-r border-container-high flex flex-col justify-between p-4 h-full">
@@ -59,14 +66,14 @@ export function Sidebar() {
       <div className="flex flex-col gap-2 p-3 bg-container rounded-xl shadow-xs border border-container-high">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
             <span className="text-xs font-semibold text-on-surface">Lokal (JSON) Aktif</span>
           </div>
-          <span className="material-symbols-outlined text-base text-emerald-600">check_circle</span>
+          <span className="material-symbols-outlined text-base text-success">check_circle</span>
         </div>
         <div className="flex items-center justify-between text-xs text-on-surface/70 pt-2 border-t border-container-high">
           <span>Data Tersimpan</span>
-          <span className="font-semibold text-on-surface">212 item</span>
+          <span className="font-semibold text-on-surface">{videos.length} item</span>
         </div>
         <div className="flex items-center justify-between text-xs text-on-surface/70">
           <span>Mode Engine</span>

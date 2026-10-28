@@ -9,16 +9,6 @@ const formatDate = (dateStr: string, timeStr: string) => {
   return `${day}/${month}/${year} ${timeStr}`;
 };
 
-// Helper function to parse date back
-const parseDate = (formatted: string) => {
-  const [datePart, timePart] = formatted.split(' ');
-  const [day, month, year] = datePart.split('/');
-  return {
-    date: `${year}-${month}-${day}`,
-    time: timePart
-  };
-};
-
 export function DaftarVideo() {
   const { videos, deleteVideo, updateVideo, updateMultipleVideos } = useAppContext();
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,7 +129,7 @@ export function DaftarVideo() {
             <div className="flex flex-col gap-4">
           <div>
             <h1 className="text-xl font-bold text-on-surface">Daftar Video & Jadwal</h1>
-            <p className="text-xs text-on-surface/60">Manajemen pipeline video upload (212 total entries)</p>
+            <p className="text-xs text-on-surface/60">Manajemen pipeline video upload ({videos.length} total entries)</p>
           </div>
 
           <div className="grid grid-cols-4 gap-3">
@@ -161,7 +151,7 @@ export function DaftarVideo() {
             </div>
             <div className="p-3 bg-container-low rounded-xl border border-container-high">
               <span className="text-xs text-on-surface/60 font-medium">Uploaded</span>
-              <div className="text-lg font-bold text-emerald-600 mt-1">
+              <div className="text-lg font-bold text-success mt-1">
                 {videos.filter(v => v.status === 'UPLOADED').length}
               </div>
             </div>
@@ -174,7 +164,7 @@ export function DaftarVideo() {
             <input
               type="text"
               placeholder="Cari berdasarkan judul atau series..."
-              className="px-3 py-1.5 bg-white text-xs rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary flex-1"
+              className="px-3 py-1.5 bg-surface text-xs rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary flex-1"
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
             />
@@ -184,7 +174,7 @@ export function DaftarVideo() {
                   key={cat}
                   onClick={() => { setCategoryFilter(cat); setCurrentPage(1); }}
                   className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                    categoryFilter === cat ? 'bg-primary text-white' : 'bg-white text-on-surface/70 hover:bg-container'
+                    categoryFilter === cat ? 'bg-primary text-white' : 'bg-surface text-on-surface/70 hover:bg-container'
                   }`}
                 >
                   {cat === 'ALL' ? 'Semua' : cat === 'NOVEL_CHINA' ? 'Novel China' : 'Light Novel'}
@@ -195,7 +185,7 @@ export function DaftarVideo() {
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-            className="px-3 py-1.5 bg-white text-xs rounded-lg border border-container-high focus:outline-none text-on-surface/80"
+            className="px-3 py-1.5 bg-surface text-xs rounded-lg border border-container-high focus:outline-none text-on-surface/80"
           >
             <option value="ALL">Semua Status</option>
             <option value="PENDING">Belum Upload</option>
@@ -204,7 +194,7 @@ export function DaftarVideo() {
           <select
             value={sortOrder}
             onChange={(e) => { setSortOrder(e.target.value); setCurrentPage(1); }}
-            className="px-3 py-1.5 bg-white text-xs rounded-lg border border-container-high focus:outline-none text-on-surface/80"
+            className="px-3 py-1.5 bg-surface text-xs rounded-lg border border-container-high focus:outline-none text-on-surface/80"
           >
             <option value="newest">Terbaru</option>
             <option value="oldest">Terlama</option>
@@ -213,18 +203,18 @@ export function DaftarVideo() {
 
         {/* Bulk Action Bar */}
         {selectedIds.size > 0 && (
-          <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-900">{selectedIds.size} item dipilih</span>
+          <div className="p-3 bg-info/10 rounded-xl border border-info/20 flex items-center justify-between">
+            <span className="text-xs font-semibold text-info">{selectedIds.size} item dipilih</span>
             <div className="flex gap-2">
               <button
                 onClick={() => handleBulkStatusUpdate('UPLOADED')}
-                className="px-3 py-1.5 bg-emerald-500 text-white text-xs rounded-lg hover:bg-emerald-600 transition-colors font-medium"
+                className="px-3 py-1.5 bg-success text-on-success text-xs rounded-lg hover:bg-success/90 transition-colors font-medium"
               >
                 Tandai Sudah Upload
               </button>
               <button
                 onClick={() => handleBulkStatusUpdate('PENDING')}
-                className="px-3 py-1.5 bg-amber-500 text-white text-xs rounded-lg hover:bg-amber-600 transition-colors font-medium"
+                className="px-3 py-1.5 bg-warning text-on-warning text-xs rounded-lg hover:bg-warning/90 transition-colors font-medium"
               >
                 Tandai Belum Upload
               </button>
@@ -233,7 +223,7 @@ export function DaftarVideo() {
         )}
 
         {/* Table */}
-        <div className="flex-1 bg-white rounded-xl border border-container-high overflow-hidden flex flex-col">
+        <div className="flex-1 bg-surface rounded-xl border border-container-high overflow-hidden flex flex-col">
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left text-xs">
               <thead className="bg-container-low border-b border-container-high text-on-surface/60 uppercase font-semibold sticky top-0">
@@ -259,7 +249,7 @@ export function DaftarVideo() {
                 {paginatedVideos.map((video, index) => (
                   <tr
                     key={video.id}
-                    className={`hover:bg-container-low/50 transition-colors ${selectedIds.has(video.id) ? 'bg-blue-50' : ''}`}
+                    className={`hover:bg-container-low/50 transition-colors ${selectedIds.has(video.id) ? 'bg-info/10' : ''}`}
                   >
                     <td className="p-3">
                       <input
@@ -272,7 +262,7 @@ export function DaftarVideo() {
                     <td className="p-3 font-semibold text-on-surface/60">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td className="p-3">
                       <span className={`px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 w-fit ${
-                        video.status === 'UPLOADED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                        video.status === 'UPLOADED' ? 'bg-success/15 text-success' : 'bg-warning/15 text-warning'
                       }`}>
                         {video.status === 'UPLOADED' && <span className="material-symbols-outlined text-sm">check_circle</span>}
                         {video.status === 'UPLOADED' ? 'Sudah Upload' : 'Belum Upload'}
@@ -280,7 +270,7 @@ export function DaftarVideo() {
                     </td>
                     <td className="p-3 whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        video.category === 'NOVEL_CHINA' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'
+                        video.category === 'NOVEL_CHINA' ? 'bg-info/15 text-info' : 'bg-success/15 text-success'
                       }`}>
                         {video.category === 'NOVEL_CHINA' ? 'Novel China' : 'Light Novel'}
                       </span>
@@ -299,8 +289,8 @@ export function DaftarVideo() {
                           title="Copy tanggal"
                           className={`p-1 rounded transition-all ${
                             copiedId === video.id 
-                              ? 'bg-emerald-500/20 text-emerald-600' 
-                              : 'bg-gray-200/50 text-on-surface/60 hover:bg-gray-300/70'
+                              ? 'bg-success/20 text-success' 
+                              : 'bg-container text-on-surface/60 hover:bg-container-high'
                           }`}
                         >
                           <span className="material-symbols-outlined text-sm">
@@ -311,9 +301,9 @@ export function DaftarVideo() {
                     </td>
                     <td className="p-3 text-on-surface/80">
                       {video.status === 'UPLOADED' ? (
-                        <span className="text-emerald-600 font-semibold">Selesai</span>
+                        <span className="text-success font-semibold">Selesai</span>
                       ) : (
-                        <span className="text-amber-600 font-semibold">Menunggu</span>
+                        <span className="text-warning font-semibold">Menunggu</span>
                       )}
                     </td>
                     <td className="p-3">
@@ -321,14 +311,14 @@ export function DaftarVideo() {
                         <button
                           onClick={() => setSelectedVideo(video)}
                           title="Lihat detail"
-                          className="p-1.5 bg-blue-500/10 text-blue-500 border border-blue-500 rounded hover:bg-blue-500/20 transition-colors"
+                          className="p-1.5 bg-info/10 text-info border border-info rounded hover:bg-info/20 transition-colors"
                         >
                           <span className="material-symbols-outlined text-sm">visibility</span>
                         </button>
                         <button
                           onClick={() => openEditModal(video)}
                           title="Edit"
-                          className="p-1.5 bg-amber-500/10 text-amber-500 border border-amber-500 rounded hover:bg-amber-500/20 transition-colors"
+                          className="p-1.5 bg-warning/10 text-warning border border-warning rounded hover:bg-warning/20 transition-colors"
                         >
                           <span className="material-symbols-outlined text-sm">edit</span>
                         </button>
@@ -338,7 +328,7 @@ export function DaftarVideo() {
                             setDeleteConfirmModal({ isOpen: true, videoId: video.id, videoTitle: video.title });
                           }}
                           title="Hapus"
-                          className="p-1.5 bg-red-500/10 text-red-500 border border-red-500 rounded hover:bg-red-500/20 transition-colors"
+                          className="p-1.5 bg-danger/10 text-danger border border-danger rounded hover:bg-danger/20 transition-colors"
                         >
                           <span className="material-symbols-outlined text-sm">delete</span>
                         </button>
@@ -357,7 +347,7 @@ export function DaftarVideo() {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="px-2 py-1 bg-white rounded border border-container-high disabled:opacity-50"
+                className="px-2 py-1 bg-surface rounded border border-container-high disabled:opacity-50"
               >
                 Prev
               </button>
@@ -365,7 +355,7 @@ export function DaftarVideo() {
               <button
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                className="px-2 py-1 bg-white rounded border border-container-high disabled:opacity-50"
+                className="px-2 py-1 bg-surface rounded border border-container-high disabled:opacity-50"
               >
                 Next
               </button>
@@ -417,7 +407,7 @@ export function DaftarVideo() {
       {/* Edit Modal */}
       {editingId && editForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
+          <div className="bg-surface rounded-xl p-6 w-96 shadow-lg">
             <h2 className="text-lg font-bold text-on-surface mb-4">Edit Video</h2>
             
             <div className="flex flex-col gap-4">
@@ -427,7 +417,7 @@ export function DaftarVideo() {
                   type="date"
                   value={editForm.date}
                   onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
-                  className="w-full px-3 py-2 border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-3 py-2 bg-surface border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
@@ -437,7 +427,7 @@ export function DaftarVideo() {
                   type="time"
                   value={editForm.time}
                   onChange={(e) => setEditForm({ ...editForm, time: e.target.value })}
-                  className="w-full px-3 py-2 border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-3 py-2 bg-surface border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
@@ -446,7 +436,7 @@ export function DaftarVideo() {
                 <select
                   value={editForm.status}
                   onChange={(e) => setEditForm({ ...editForm, status: e.target.value as 'PENDING' | 'UPLOADED' })}
-                  className="w-full px-3 py-2 border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-3 py-2 bg-surface border border-container-high rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="PENDING">Belum Upload</option>
                   <option value="UPLOADED">Sudah Upload</option>

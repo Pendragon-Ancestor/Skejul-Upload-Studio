@@ -30,39 +30,39 @@ export function Modal({
   const getBgColor = () => {
     switch (type) {
       case 'success':
-        return 'bg-emerald-50';
+        return 'bg-success/15';
       case 'danger':
-        return 'bg-red-50';
+        return 'bg-danger/20';
       case 'confirmation':
-        return 'bg-blue-50';
+        return 'bg-info/15';
       default:
-        return 'bg-white';
+        return 'bg-surface';
     }
   };
 
   const getIconColor = () => {
     switch (type) {
       case 'success':
-        return 'text-emerald-500';
+        return 'text-success';
       case 'danger':
-        return 'text-red-500';
+        return 'text-danger';
       case 'confirmation':
-        return 'text-blue-500';
+        return 'text-info';
       default:
-        return 'text-gray-500';
+        return 'text-on-surface/60';
     }
   };
 
   const getButtonColor = () => {
     switch (type) {
       case 'success':
-        return 'bg-emerald-500 hover:bg-emerald-600';
+        return 'bg-success hover:bg-success/90 text-on-success';
       case 'danger':
-        return 'bg-red-500 hover:bg-red-600';
+        return 'bg-danger hover:bg-danger/90 text-on-danger';
       case 'confirmation':
-        return 'bg-blue-500 hover:bg-blue-600';
+        return 'bg-info hover:bg-info/90 text-on-info';
       default:
-        return 'bg-gray-500 hover:bg-gray-600';
+        return 'bg-primary hover:bg-primary/90 text-on-primary';
     }
   };
 
@@ -82,10 +82,10 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-      <div className={`${getBgColor()} rounded-2xl p-8 w-96 shadow-2xl animate-slideUp border border-gray-100`}>
+      <div className={`${getBgColor()} rounded-2xl p-8 w-96 shadow-2xl animate-slideUp border border-outline-variant`}>
         {/* Icon */}
         <div className="flex justify-center mb-4">
-          <div className={`w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg`}>
+          <div className={`w-16 h-16 rounded-full bg-container flex items-center justify-center shadow-lg`}>
             <span className={`material-symbols-outlined text-4xl ${getIconColor()}`}>
               {getIconName()}
             </span>
@@ -110,7 +110,7 @@ export function Modal({
           {secondaryButtonText && (
             <button
               onClick={onSecondaryClick}
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 text-on-surface font-medium text-sm hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-3 rounded-lg border border-outline-variant bg-container text-on-surface font-medium text-sm hover:bg-container-high transition-colors"
             >
               {secondaryButtonText}
             </button>
@@ -118,7 +118,7 @@ export function Modal({
           {primaryButtonText && (
             <button
               onClick={onPrimaryClick}
-              className={`flex-1 px-4 py-3 rounded-lg ${getButtonColor()} text-white font-medium text-sm transition-colors`}
+              className={`flex-1 px-4 py-3 rounded-lg ${getButtonColor()} font-medium text-sm transition-colors`}
             >
               {primaryButtonText}
             </button>

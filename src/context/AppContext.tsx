@@ -13,12 +13,12 @@ export interface VideoEntry {
 
 interface AppContextType {
   videos: VideoEntry[];
-  addVideo: (video: Omit<VideoEntry, 'id' | 'status'>) => void;
+  addVideo: (video: Omit<VideoEntry, 'id' | 'status'> & { status?: VideoEntry['status'] }) => void;
   deleteVideo: (id: string) => void;
   updateVideo: (id: string, updates: Partial<VideoEntry>) => void;
   updateMultipleVideos: (ids: string[], updates: Partial<VideoEntry>) => void;
   exportData: () => void;
-  importData: (data: any[]) => void;
+  importData: (data: any[]) => { success: boolean; message: string; count: number };
 }
 
 const parseIndonesianDate = (dateStr: string): { date: string, time: string } => {
@@ -91,11 +91,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [videos, isInitialized]);
 
-  const addVideo = (newVideo: Omit<VideoEntry, 'id' | 'status'>) => {
+  const addVideo = (newVideo: Omit<VideoEntry, 'id' | 'status'> & { status?: VideoEntry['status'] }) => {
     setVideos(prev => [...prev, {
       ...newVideo,
       id: `v-${Date.now()}`,
-      status: 'PENDING'
+      status: newVideo.status || 'PENDING'
     }]);
   };
 
@@ -121,10 +121,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     downloadAnchorNode.remove();
   };
 
-  const importData = (data: any[]) => {
+  const importData = (data: any[]): { success: boolean; message: string; count: number } => {
     if (!Array.isArray(data) || data.length === 0) {
-      alert('Format JSON tidak valid atau file kosong');
-      return;
+      return { success: false, message: 'Format JSON tidak valid atau file kosong', count: 0 };
     }
 
     try {
@@ -139,8 +138,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         // Already in new format
         newVideos = data as VideoEntry[];
       } else {
-        alert('Format JSON tidak dikenali');
-        return;
+        return { success: false, message: 'Format JSON tidak dikenali', count: 0 };
       }
 
       // Validate each entry
@@ -149,16 +147,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       );
 
       if (validVideos.length === 0) {
-        alert('Tidak ada data valid dalam file JSON');
-        return;
+        return { success: false, message: 'Tidak ada data valid dalam file JSON', count: 0 };
       }
 
       // Merge with existing data (append, not overwrite)
       setVideos(prev => [...prev, ...validVideos]);
-      alert(`Berhasil import ${validVideos.length} video!`);
+      return { success: true, message: `Berhasil import ${validVideos.length} video!`, count: validVideos.length };
     } catch (error) {
       console.error('Import error:', error);
-      alert('Gagal mengimport file: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      return { success: false, message: 'Gagal mengimport file: ' + (error instanceof Error ? error.message : 'Unknown error'), count: 0 };
     }
   };
 

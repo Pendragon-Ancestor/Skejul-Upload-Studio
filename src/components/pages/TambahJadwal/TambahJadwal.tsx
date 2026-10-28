@@ -79,22 +79,15 @@ const calculateNextSchedule = (lastUpload: any, category: 'NOVEL_CHINA' | 'LIGHT
 export function TambahJadwal() {
   const { videos, addVideo } = useAppContext();
   const [judulNovel, setJudulNovel] = useState('');
-  const [date, setDate] = useState('2026-10-15');
-  const [time, setTime] = useState('00:00');
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [time, setTime] = useState('06:00');
   const [category, setCategory] = useState<'NOVEL_CHINA' | 'LIGHT_NOVEL'>('NOVEL_CHINA');
   const [status, setStatus] = useState<'PENDING' | 'UPLOADED'>('PENDING');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  // Auto-update time and date based on category and last upload
-  useEffect(() => {
-    const lastUploadByCategory = category === 'NOVEL_CHINA' ? lastChinaUpload : lastLNUpload;
-    const nextSchedule = calculateNextSchedule(lastUploadByCategory, category, videos);
-    setDate(nextSchedule.date);
-    setTime(nextSchedule.time);
-  }, [category]);
-
-  // Check collision
-  const collision = videos.find(v => v.uploadDate === date && v.uploadTime === time);
+  const [collisionModal, setCollisionModal] = useState<{
+    isOpen: boolean;
+    existingTitle: string;
+  }>({ isOpen: false, existingTitle: '' });
 
   // Get last upload for each category - using precision penuh (date + time)
   const lastChinaUpload = videos
@@ -118,13 +111,27 @@ export function TambahJadwal() {
   // Calculate next schedule for "Update Otomatis" display
   const nextSchedule = calculateNextSchedule(lastUpload, category, videos);
 
+  // Auto-update time and date based on category and last upload
+  useEffect(() => {
+    const lastUploadByCategory = category === 'NOVEL_CHINA' ? lastChinaUpload : lastLNUpload;
+    const next = calculateNextSchedule(lastUploadByCategory, category, videos);
+    setDate(next.date);
+    setTime(next.time);
+  }, [category, lastChinaUpload, lastLNUpload, videos]);
+
+  // Check collision
+  const collision = videos.find(v => v.uploadDate === date && v.uploadTime === time);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (collision) {
-      const confirmAdd = window.confirm(`Peringatan: Slot waktu ${date} jam ${time} sudah terisi oleh "${collision.title}". Apakah Anda tetap ingin menimpanya?`);
-      if (!confirmAdd) return;
+      setCollisionModal({ isOpen: true, existingTitle: collision.title });
+      return;
     }
+    submitVideo();
+  };
 
+  const submitVideo = () => {
     addVideo({
       title: judulNovel,
       category,
@@ -132,6 +139,7 @@ export function TambahJadwal() {
       part: 1,
       uploadDate: date,
       uploadTime: time,
+      status,
     });
     setJudulNovel('');
     setShowSuccessModal(true);
@@ -196,7 +204,7 @@ export function TambahJadwal() {
 
         <form onSubmit={handleSubmit} className="bg-container-low border border-container-high rounded-xl p-4 flex flex-col gap-4 text-xs">
           {collision && (
-            <div className="p-3 bg-amber-50 border border-amber-300 text-amber-800 rounded-lg flex items-center justify-between">
+            <div className="p-3 bg-warning/10 border border-warning/30 text-warning rounded-lg flex items-center justify-between">
               <span>⚠️ Slot tanggal {date} pukul {time} sudah terisi: <strong>{collision.title}</strong></span>
             </div>
           )}
@@ -207,7 +215,7 @@ export function TambahJadwal() {
               type="text"
               value={judulNovel}
               onChange={(e) => setJudulNovel(e.target.value)}
-              className="w-full px-3 py-1.5 bg-white rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full px-3 py-1.5 bg-surface rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary"
               placeholder="Masukkan judul novel lengkap..."
             />
           </div>
@@ -218,14 +226,14 @@ export function TambahJadwal() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-1.5 bg-white rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-full px-3 py-1.5 bg-surface rounded-lg border border-container-high focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div>
             <label className="font-semibold block mb-1">Jam Upload</label>
             {category === 'LIGHT_NOVEL' ? (
-              <div className="px-3 py-1.5 bg-white rounded-lg border border-container-high text-on-surface font-semibold">
+              <div className="px-3 py-1.5 bg-surface rounded-lg border border-container-high text-on-surface font-semibold">
                 00:00 WIB (Tetap)
               </div>
             ) : (
@@ -236,7 +244,7 @@ export function TambahJadwal() {
                     type="button"
                     onClick={() => setTime(t)}
                     className={`py-1.5 rounded-lg border font-medium text-center ${
-                      time === t ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface border-container-high'
+                      time === t ? 'bg-primary text-white border-primary' : 'bg-surface text-on-surface border-container-high'
                     }`}
                   >
                     {t}
@@ -253,7 +261,7 @@ export function TambahJadwal() {
                 type="button"
                 onClick={() => setStatus('PENDING')}
                 className={`flex-1 px-3 py-1.5 rounded-lg border font-medium ${
-                  status === 'PENDING' ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-on-surface border-container-high'
+                  status === 'PENDING' ? 'bg-warning text-on-warning border-warning' : 'bg-surface text-on-surface border-container-high'
                 }`}
               >
                 BELUM DIUPLOAD
@@ -262,7 +270,7 @@ export function TambahJadwal() {
                 type="button"
                 onClick={() => setStatus('UPLOADED')}
                 className={`flex-1 px-3 py-1.5 rounded-lg border font-medium ${
-                  status === 'UPLOADED' ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-on-surface border-container-high'
+                  status === 'UPLOADED' ? 'bg-success text-on-success border-success' : 'bg-surface text-on-surface border-container-high'
                 }`}
               >
                 SUDAH DIUPLOAD
@@ -286,8 +294,8 @@ export function TambahJadwal() {
           <button
             onClick={() => setCategory('NOVEL_CHINA')}
             className={`flex-1 py-2 px-3 text-xs font-bold border-b-2 transition-colors ${
-              category === 'NOVEL_CHINA' 
-                ? 'text-blue-400 border-blue-400' 
+              category === 'NOVEL_CHINA'
+                ? 'text-info border-info'
                 : 'text-on-surface/60 border-transparent hover:text-on-surface'
             }`}
           >
@@ -296,8 +304,8 @@ export function TambahJadwal() {
           <button
             onClick={() => setCategory('LIGHT_NOVEL')}
             className={`flex-1 py-2 px-3 text-xs font-bold border-b-2 transition-colors ${
-              category === 'LIGHT_NOVEL' 
-                ? 'text-purple-400 border-purple-400' 
+              category === 'LIGHT_NOVEL'
+                ? 'text-tertiary border-tertiary'
                 : 'text-on-surface/60 border-transparent hover:text-on-surface'
             }`}
           >
@@ -309,7 +317,7 @@ export function TambahJadwal() {
         {lastUpload && (
           <div className="p-4 bg-container-low rounded-xl border border-container-high">
             <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-red-400 text-lg">location_on</span>
+              <span className="material-symbols-outlined text-danger text-lg">location_on</span>
               <span className="text-xs font-bold text-on-surface/60">JADWAL TERAKHIR [{category === 'NOVEL_CHINA' ? 'NOVEL CHINA' : 'LIGHT NOVEL'}]</span>
             </div>
             <div className="text-sm font-semibold text-on-surface mb-3 line-clamp-2">{lastUpload.title}</div>
@@ -321,7 +329,7 @@ export function TambahJadwal() {
               </div>
               <div className="flex justify-between text-on-surface/70">
                 <span>Update Otomatis:</span>
-                <span className="font-semibold text-emerald-400">{formatDate(nextSchedule.date, nextSchedule.time)}</span>
+                <span className="font-semibold text-success">{formatDate(nextSchedule.date, nextSchedule.time)}</span>
               </div>
             </div>
 
@@ -331,7 +339,7 @@ export function TambahJadwal() {
                 setDate(nextSchedule.date);
                 setTime(nextSchedule.time);
               }}
-              className="w-full py-2 bg-emerald-500 text-white font-bold text-xs rounded-lg hover:bg-emerald-600 transition-colors"
+              className="w-full py-2 bg-success text-on-success font-bold text-xs rounded-lg hover:bg-success/90 transition-colors"
             >
               Pakai Waktu Ini
             </button>
@@ -345,28 +353,28 @@ export function TambahJadwal() {
             <button
               type="button"
               onClick={() => handleQuickAction('nextslot')}
-              className="px-3 py-1.5 bg-orange-500/20 text-orange-400 border border-orange-500 rounded-lg text-[10px] font-bold hover:bg-orange-500/30 transition-colors"
+              className="px-3 py-1.5 bg-warning/20 text-warning border border-warning rounded-lg text-[10px] font-bold hover:bg-warning/30 transition-colors"
             >
               +Slot Berikut
             </button>
             <button
               type="button"
               onClick={() => handleQuickAction('nextday')}
-              className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500 rounded-lg text-[10px] font-bold hover:bg-blue-500/30 transition-colors"
+              className="px-3 py-1.5 bg-info/20 text-info border border-info rounded-lg text-[10px] font-bold hover:bg-info/30 transition-colors"
             >
               +1 Hari
             </button>
             <button
               type="button"
               onClick={() => handleQuickAction('addhours')}
-              className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500 rounded-lg text-[10px] font-bold hover:bg-blue-500/30 transition-colors"
+              className="px-3 py-1.5 bg-info/20 text-info border border-info rounded-lg text-[10px] font-bold hover:bg-info/30 transition-colors"
             >
               +6 Jam
             </button>
             <button
               type="button"
               onClick={() => handleQuickAction('copylatest')}
-              className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500 rounded-lg text-[10px] font-bold hover:bg-blue-500/30 transition-colors"
+              className="px-3 py-1.5 bg-info/20 text-info border border-info rounded-lg text-[10px] font-bold hover:bg-info/30 transition-colors"
             >
               Salin Terakhir
             </button>
@@ -390,6 +398,21 @@ export function TambahJadwal() {
         message="Jadwal Anda telah berhasil disimpan ke pipeline upload. Form siap untuk input jadwal berikutnya."
         primaryButtonText="Tutup"
         onPrimaryClick={() => setShowSuccessModal(false)}
+      />
+
+      {/* Collision Confirmation Modal */}
+      <Modal
+        isOpen={collisionModal.isOpen}
+        type="confirmation"
+        title="Slot Waktu Bentrok!"
+        message={`Slot tanggal ${date} pukul ${time} sudah terisi oleh "${collisionModal.existingTitle}". Apakah Anda tetap ingin menambahkan jadwal ini?`}
+        primaryButtonText="Tetap Tambah"
+        secondaryButtonText="Batal"
+        onPrimaryClick={() => {
+          setCollisionModal({ isOpen: false, existingTitle: '' });
+          submitVideo();
+        }}
+        onSecondaryClick={() => setCollisionModal({ isOpen: false, existingTitle: '' })}
       />
     </div>
   );

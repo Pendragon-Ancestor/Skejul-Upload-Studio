@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAppContext } from '../../context/AppContext';
 
@@ -6,10 +6,28 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
   const { videos } = useAppContext();
   const [showNotifications, setShowNotifications] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
 
-  // Get upcoming videos with status 'PENDING'
+  // Close notification dropdown on outside click
+  useEffect(() => {
+    if (!showNotifications) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showNotifications]);
+
+  // Get upcoming videos with status 'PENDING', sorted by date ascending
   const upcomingVideos = videos
     .filter(v => v.status === 'PENDING')
+    .sort((a, b) => {
+      const dtA = `${a.uploadDate}T${a.uploadTime}:00`;
+      const dtB = `${b.uploadDate}T${b.uploadTime}:00`;
+      return new Date(dtA).getTime() - new Date(dtB).getTime();
+    })
     .slice(0, 5);
 
   return (
@@ -29,7 +47,7 @@ export function Header() {
 
       <div className="flex items-center gap-2">
         {/* Notification Bell */}
-        <div className="relative">
+        <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="h-8 w-8 flex items-center justify-center text-on-surface/70 hover:bg-container rounded-lg transition-colors border border-container-high relative"
@@ -44,7 +62,7 @@ export function Header() {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white border border-container-high rounded-xl shadow-lg p-3 z-50 flex flex-col gap-2">
+            <div className="absolute right-0 mt-2 w-80 bg-surface border border-container-high rounded-xl shadow-lg p-3 z-50 flex flex-col gap-2">
               <div className="flex items-center justify-between pb-2 border-b border-container-high">
                 <span className="font-bold text-xs text-on-surface">Pengingat Upload Mendatang</span>
                 <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-bold">

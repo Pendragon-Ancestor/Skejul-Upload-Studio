@@ -7,6 +7,7 @@ import { DaftarVideo } from './components/pages/DaftarVideo/DaftarVideo';
 import { KalenderUpload } from './components/pages/KalenderUpload/KalenderUpload';
 import { TambahJadwal } from './components/pages/TambahJadwal/TambahJadwal';
 import { Statistik } from './components/pages/Statistik/Statistik';
+import { Pengaturan } from './components/pages/Pengaturan/Pengaturan';
 import './App.css';
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
                   <Route path="/kalender-upload" element={<KalenderUpload />} />
                   <Route path="/tambah-jadwal" element={<TambahJadwal />} />
                   <Route path="/statistik" element={<Statistik />} />
+                  <Route path="/pengaturan" element={<Pengaturan />} />
+                  <Route path="/settings" element={<Pengaturan />} />
                 </Routes>
               </main>
             </div>

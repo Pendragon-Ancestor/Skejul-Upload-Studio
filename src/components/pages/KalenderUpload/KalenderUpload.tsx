@@ -9,6 +9,7 @@ export function KalenderUpload() {
   const month = currentDate.getMonth();
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=Min, 1=Sen, ...
   const timeSlots = ['00:00', '06:00', '12:00', '18:00'];
 
   const getVideosForDayAndTime = (day: number, time: string) => {
@@ -46,12 +47,17 @@ export function KalenderUpload() {
           </div>
         ))}
 
+        {/* Offset untuk hari pertama bulan */}
+        {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+          <div key={`offset-${i}`} className="min-h-[140px]" />
+        ))}
+
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const dayNum = i + 1;
           return (
             <div
               key={dayNum}
-              className="bg-white border border-container-high rounded-lg p-2 min-h-[140px] flex flex-col justify-start gap-1 hover:border-primary transition-all shadow-sm"
+              className="bg-surface border border-container-high rounded-lg p-2 min-h-[140px] flex flex-col justify-start gap-1 hover:border-primary transition-all shadow-sm"
             >
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-bold text-on-surface">{dayNum}</span>

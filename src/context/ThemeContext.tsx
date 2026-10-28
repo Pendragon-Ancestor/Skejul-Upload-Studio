@@ -9,11 +9,17 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const THEME_STORAGE_KEY = 'skejul_theme';
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+    return saved === 'dark' || saved === 'light' ? saved : 'light';
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
   const toggleTheme = () => {
